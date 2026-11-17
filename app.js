@@ -1,3 +1,34 @@
+// LIHTNE PAROOLIVÄRAV
+// Muuda allolev parool enda valitud parooliks enne GitHubi üleslaadimist.
+// NB! GitHub Pages on avalik: see on lihtne ekraanilukk, mitte tugev turvalahendus.
+const ACCESS_PASSWORD = 'KoduMata2026!';
+const passwordScreen = document.querySelector('#password-screen');
+const passwordForm = document.querySelector('#password-form');
+const passwordInput = document.querySelector('#site-password');
+const passwordError = document.querySelector('#password-error');
+const appContent = document.querySelector('#app-content');
+
+function unlockGame() {
+  passwordScreen.hidden = true;
+  appContent.hidden = false;
+}
+
+if (sessionStorage.getItem('kodumata-unlocked') === 'yes') {
+  unlockGame();
+}
+
+passwordForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (passwordInput.value === ACCESS_PASSWORD) {
+    sessionStorage.setItem('kodumata-unlocked', 'yes');
+    passwordError.textContent = '';
+    unlockGame();
+  } else {
+    passwordError.textContent = 'See parool ei ole õige. Proovi uuesti!';
+    passwordInput.select();
+  }
+});
+
 const startScreen = document.querySelector('#start-screen');
 const gameScreen = document.querySelector('#game-screen');
 const endScreen = document.querySelector('#end-screen');
@@ -52,7 +83,7 @@ function startGame() {
   totalQuestions = Number(questionCountInput.value);
   timeLimit = Number(timeLimitInput.value);
   if (!Number.isInteger(totalQuestions) || totalQuestions < 1 || totalQuestions > 100 ||
-      !Number.isInteger(timeLimit) || timeLimit < 5 || timeLimit > 300) {
+    !Number.isInteger(timeLimit) || timeLimit < 5 || timeLimit > 300) {
     alert('Palun vali tehete arv vahemikus 1–100 ja aeg vahemikus 5–300 sekundit.');
     return;
   }

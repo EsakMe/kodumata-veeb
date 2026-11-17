@@ -56,3 +56,27 @@ footer { padding: 20px 10px 4px; color: #9aa5b7; text-align: center; font-size: 
   .answer-form .button { width: 100%; }
   .game-topline { font-size: 12px; }
 }
+
+
+/* Lihtne paroolivärav */
+.password-screen {
+  min-height: calc(100vh - 56px);
+  display: grid;
+  place-items: center;
+}
+.password-card {
+  width: min(100%, 420px);
+  padding: clamp(24px, 6vw, 42px);
+  border: 1px solid #e5ebf5;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 18px 55px #29446b18;
+  text-align: center;
+  display: grid;
+  gap: 14px;
+}
+.password-mark { margin: 0 auto; }
+.password-card h1 { margin-bottom: 4px; }
+.password-card h2 { margin: 4px 0 0; }
+.password-hint { margin: 0 0 4px; color: #6d7890; line-height: 1.5; }
+.password-error { min-height: 22px; margin: 0; color: #d34e4e; font-size: 14px; font-weight: 800; }
