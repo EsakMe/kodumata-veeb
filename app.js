@@ -4,11 +4,12 @@
 
   function byId(id) {
     return document.getElementById(id);
-    }
-      function focusAnswerField() {
+  }
+
+  function focusAnswerField() {
     if (!answerInput.disabled) {
       answerInput.focus();
-  }
+    }
   }
 
   var startScreen = byId('start-screen');
