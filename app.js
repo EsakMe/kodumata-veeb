@@ -4,6 +4,11 @@
 
   function byId(id) {
     return document.getElementById(id);
+      function focusAnswerField() {
+    if (!answerInput.disabled) {
+      answerInput.focus();
+    }
+  }
   }
 
   var startScreen = byId('start-screen');
@@ -163,6 +168,7 @@
     answerInput.value = '';
     answerInput.disabled = false;
     checkButton.disabled = false;
+    focusAnswerField();
 
     timeLeft = timeLimit;
     updateTimer();
@@ -240,7 +246,8 @@
       nextQuestionId = window.setTimeout(nextQuestion, 2500);
       return false;
     }
-
+    
+    focusAnswerField();
     remaining = 3 - wrongAttempts;
     setFeedback(
       encouragement[randomInteger(0, encouragement.length - 1)] +
