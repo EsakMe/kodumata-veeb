@@ -4,10 +4,10 @@
 
   function byId(id) {
     return document.getElementById(id);
+    }
       function focusAnswerField() {
     if (!answerInput.disabled) {
       answerInput.focus();
-    }
   }
   }
 
