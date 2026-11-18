@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="et">
 <head>
   <meta charset="utf-8">
@@ -12,7 +12,7 @@
   <main class="app-shell">
     <header class="brand">
       <div class="brand-mark" aria-hidden="true">✦</div>
-      <div>
+      <div class="brand-title">
         <p class="eyebrow">Väike samm, suur oskus!</p>
         <h1>KODUMATA</h1>
       </div>
@@ -24,18 +24,18 @@
       <p class="intro">Harjutame liitmist ja lahutamist. Sina saad hakkama!</p>
 
       <form id="settings-form" class="settings-form">
-        <label class="setting">
+        <label class="setting" for="number-range">
           <span>Milliste arvudega soovid arvutada?</span>
           <select id="number-range">
             <option value="50">Arvud 1–50 (vastus kuni 50)</option>
             <option value="100" selected>Arvud 1–100 (vastus kuni 100)</option>
           </select>
         </label>
-        <label class="setting">
+        <label class="setting" for="question-count">
           <span>Mitu tehet soovid teha?</span>
           <input id="question-count" type="number" min="1" max="100" value="10" required>
         </label>
-        <label class="setting">
+        <label class="setting" for="time-limit">
           <span>Mitu sekundit on ühe tehte jaoks?</span>
           <input id="time-limit" type="number" min="5" max="300" step="5" value="30" required>
         </label>
@@ -72,6 +72,7 @@
 
     <footer>🌈 Harjutamine teeb meistriks!</footer>
   </main>
+  <noscript><p class="noscript-message">Kodumata mängu kasutamiseks peab veebibrauseris JavaScript olema lubatud.</p></noscript>
   <script src="app.js"></script>
 </body>
 </html>

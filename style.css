@@ -1,59 +1,358 @@
-:root {
+/* Kodumata stiilid – sobitatud ka vanema iOS 9 Safari jaoks. */
+html {
   font-family: "Trebuchet MS", Arial, sans-serif;
   color: #26334a;
   background: #f1f6ff;
-  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
-* { box-sizing: border-box; }
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 body {
-  min-height: 100vh;
+  min-height: 100%;
   margin: 0;
   padding: 28px 16px;
+  background: #f4f7ff;
+  background: -webkit-radial-gradient(circle at 12% 12%, #e4f2ff 0, transparent 28%),
+              -webkit-radial-gradient(circle at 90% 85%, #fff0d9 0, transparent 25%), #f4f7ff;
   background: radial-gradient(circle at 12% 12%, #e4f2ff 0, transparent 28%),
               radial-gradient(circle at 90% 85%, #fff0d9 0, transparent 25%), #f4f7ff;
 }
-.app-shell { width: min(100%, 650px); margin: 0 auto; }
-.brand { display: flex; align-items: center; justify-content: center; gap: 13px; margin: 8px 0 22px; }
-.brand-mark { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 17px; color: white; background: #5b8def; font-size: 32px; box-shadow: 0 7px 18px #5b8def44; }
-.eyebrow { margin: 0 0 2px; color: #70809a; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-h1 { margin: 0; color: #3974d4; font-size: clamp(27px, 7vw, 36px); letter-spacing: .08em; }
-.card { padding: clamp(22px, 6vw, 42px); border: 1px solid #e5ebf5; border-radius: 28px; background: #fff; box-shadow: 0 18px 55px #29446b12; text-align: center; }
-[hidden] { display: none !important; }
-.hero-emoji { margin: 0 auto 10px; font-size: 48px; }
-h2 { margin: 8px 0 10px; font-size: clamp(23px, 5vw, 30px); }
-.intro { margin: 0 auto 25px; color: #6d7890; line-height: 1.5; }
-.settings-form { display: grid; gap: 17px; max-width: 390px; margin: 0 auto; text-align: left; }
-.setting { display: grid; gap: 8px; color: #485772; font-size: 14px; font-weight: 800; }
-input, select { width: 100%; min-height: 54px; border: 2px solid #e0e8f5; border-radius: 14px; padding: 10px 14px; color: #26334a; background: #fbfcff; font: inherit; font-size: 18px; text-align: center; outline: none; }
-input:focus, select:focus { border-color: #79a5f3; box-shadow: 0 0 0 4px #79a5f322; }
-.button { min-height: 54px; border: 0; border-radius: 15px; padding: 13px 22px; color: white; font: inherit; font-size: 17px; font-weight: 900; cursor: pointer; transition: transform .12s, filter .12s; }
-.button:hover { filter: brightness(1.04); transform: translateY(-1px); }
-.button:active { transform: translateY(1px); }
-.button:disabled { cursor: not-allowed; opacity: .65; }
-.button-primary { background: linear-gradient(135deg, #5b8def, #4778d5); box-shadow: 0 8px 18px #5b8def38; }
-.small-note { margin: 20px 0 0; color: #8a95a8; font-size: 12px; line-height: 1.5; }
-.game-topline { display: flex; justify-content: space-between; gap: 12px; color: #5575ad; font-size: 14px; font-weight: 900; }
-.progress-track { height: 10px; margin: 13px 0 22px; overflow: hidden; border-radius: 20px; background: #edf1f8; }
-.progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #61c69a, #8bd8b5); transition: width .25s; }
-.timer { display: inline-block; margin: 0 auto 17px; border-radius: 999px; padding: 9px 18px; color: #b97818; background: #fff3dc; font-size: 17px; font-weight: 900; }
-.timer.urgent { color: #c44848; background: #ffeded; }
-.question-caption { margin: 0 0 7px; color: #8490a5; font-size: 14px; font-weight: 700; }
-.question { margin: 5px 0 22px; color: #315fae; font-size: clamp(43px, 12vw, 68px); font-weight: 1000; letter-spacing: .02em; }
-.answer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; max-width: 390px; margin: 0 auto; }
-.answer-form input { min-width: 0; font-size: 25px; }
-.answer-form .button { white-space: nowrap; }
-.feedback { min-height: 30px; margin: 20px 0 0; color: #4778d5; font-size: 17px; font-weight: 900; }
+
+.app-shell {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  margin: 8px 0 22px;
+}
+
+.brand-mark {
+  display: inline-block;
+  width: 52px;
+  height: 52px;
+  margin-right: 13px;
+  border-radius: 17px;
+  color: #fff;
+  background: #5b8def;
+  font-size: 32px;
+  line-height: 52px;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-box-shadow: 0 7px 18px rgba(91, 141, 239, .27);
+  box-shadow: 0 7px 18px rgba(91, 141, 239, .27);
+}
+
+.brand-title {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  color: #70809a;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #3974d4;
+  font-size: 34px;
+  letter-spacing: 2px;
+}
+
+.card {
+  padding: 32px;
+  border: 1px solid #e5ebf5;
+  border-radius: 26px;
+  background: #fff;
+  -webkit-box-shadow: 0 18px 55px rgba(41, 68, 107, .07);
+  box-shadow: 0 18px 55px rgba(41, 68, 107, .07);
+  text-align: center;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.hero-emoji {
+  margin: 0 auto 10px;
+  font-size: 48px;
+}
+
+h2 {
+  margin: 8px 0 10px;
+  font-size: 27px;
+}
+
+.intro {
+  margin: 0 auto 25px;
+  color: #6d7890;
+  line-height: 1.5;
+}
+
+.settings-form {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.setting {
+  display: block;
+  margin: 0 0 17px;
+  color: #485772;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.setting span {
+  display: block;
+  margin: 0 0 8px;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  min-height: 54px;
+  border: 2px solid #e0e8f5;
+  border-radius: 14px;
+  padding: 10px 14px;
+  color: #26334a;
+  background: #fbfcff;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 18px;
+  text-align: center;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #79a5f3;
+  -webkit-box-shadow: 0 0 0 3px rgba(121, 165, 243, .15);
+  box-shadow: 0 0 0 3px rgba(121, 165, 243, .15);
+}
+
+.button {
+  display: block;
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  border-radius: 15px;
+  padding: 13px 22px;
+  color: #fff;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.button-primary {
+  background: #527fdc;
+  background: -webkit-linear-gradient(135deg, #5b8def, #4778d5);
+  background: linear-gradient(135deg, #5b8def, #4778d5);
+  -webkit-box-shadow: 0 8px 18px rgba(91, 141, 239, .22);
+  box-shadow: 0 8px 18px rgba(91, 141, 239, .22);
+}
+
+.button:active {
+  opacity: .85;
+}
+
+.button:disabled {
+  cursor: default;
+  opacity: .65;
+}
+
+.small-note {
+  margin: 20px 0 0;
+  color: #8a95a8;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.game-topline {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  color: #5575ad;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress-track {
+  height: 10px;
+  margin: 13px 0 22px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #edf1f8;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: 20px;
+  background: #70cda4;
+  background: -webkit-linear-gradient(left, #61c69a, #8bd8b5);
+  background: linear-gradient(to right, #61c69a, #8bd8b5);
+}
+
+.timer {
+  display: inline-block;
+  margin: 0 auto 17px;
+  border-radius: 999px;
+  padding: 9px 18px;
+  color: #b97818;
+  background: #fff3dc;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.timer.urgent {
+  color: #c44848;
+  background: #ffeded;
+}
+
+.question-caption {
+  margin: 0 0 7px;
+  color: #8490a5;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.question {
+  margin: 5px 0 22px;
+  color: #315fae;
+  font-size: 58px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.answer-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.answer-form input {
+  display: block;
+  min-width: 0;
+  width: 55%;
+  margin-right: 10px;
+  font-size: 25px;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+.answer-form .button {
+  width: auto;
+  white-space: nowrap;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.feedback {
+  min-height: 30px;
+  margin: 20px 0 0;
+  color: #4778d5;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
 .feedback.good { color: #279768; }
 .feedback.bad { color: #d34e4e; }
 .feedback.timeup { color: #bd7b1e; }
-.final-score { margin: 15px 0; color: #3974d4; font-size: clamp(27px, 7vw, 38px); font-weight: 1000; }
-#end-screen .button { width: min(100%, 300px); margin-top: 12px; }
-footer { padding: 20px 10px 4px; color: #9aa5b7; text-align: center; font-size: 13px; font-weight: 700; }
-.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+.final-score {
+  margin: 15px 0;
+  color: #3974d4;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+#end-screen .button {
+  width: 100%;
+  max-width: 300px;
+  margin: 12px auto 0;
+}
+
+footer {
+  padding: 20px 10px 4px;
+  color: #9aa5b7;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.noscript-message {
+  margin: 20px;
+  padding: 15px;
+  color: #8b2525;
+  background: #ffeded;
+  text-align: center;
+}
+
 @media (max-width: 440px) {
   body { padding: 18px 12px; }
-  .card { border-radius: 22px; }
-  .answer-form { grid-template-columns: 1fr; }
-  .answer-form .button { width: 100%; }
+  .card { padding: 22px 18px; border-radius: 22px; }
+  h1 { font-size: 29px; }
+  h2 { font-size: 23px; }
+  .answer-form {
+    display: block;
+  }
+  .answer-form input {
+    width: 100%;
+    margin: 0 0 10px;
+  }
+  .answer-form .button {
+    width: 100%;
+  }
   .game-topline { font-size: 12px; }
+  .question { font-size: 46px; }
 }
