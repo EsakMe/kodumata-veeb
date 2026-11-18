@@ -24,11 +24,12 @@ h2 { margin: 8px 0 10px; font-size: clamp(23px, 5vw, 30px); }
 .intro { margin: 0 auto 25px; color: #6d7890; line-height: 1.5; }
 .settings-form { display: grid; gap: 17px; max-width: 390px; margin: 0 auto; text-align: left; }
 .setting { display: grid; gap: 8px; color: #485772; font-size: 14px; font-weight: 800; }
-input { width: 100%; min-height: 54px; border: 2px solid #e0e8f5; border-radius: 14px; padding: 10px 14px; color: #26334a; background: #fbfcff; font: inherit; font-size: 20px; text-align: center; outline: none; }
-input:focus { border-color: #79a5f3; box-shadow: 0 0 0 4px #79a5f322; }
+input, select { width: 100%; min-height: 54px; border: 2px solid #e0e8f5; border-radius: 14px; padding: 10px 14px; color: #26334a; background: #fbfcff; font: inherit; font-size: 18px; text-align: center; outline: none; }
+input:focus, select:focus { border-color: #79a5f3; box-shadow: 0 0 0 4px #79a5f322; }
 .button { min-height: 54px; border: 0; border-radius: 15px; padding: 13px 22px; color: white; font: inherit; font-size: 17px; font-weight: 900; cursor: pointer; transition: transform .12s, filter .12s; }
 .button:hover { filter: brightness(1.04); transform: translateY(-1px); }
 .button:active { transform: translateY(1px); }
+.button:disabled { cursor: not-allowed; opacity: .65; }
 .button-primary { background: linear-gradient(135deg, #5b8def, #4778d5); box-shadow: 0 8px 18px #5b8def38; }
 .small-note { margin: 20px 0 0; color: #8a95a8; font-size: 12px; line-height: 1.5; }
 .game-topline { display: flex; justify-content: space-between; gap: 12px; color: #5575ad; font-size: 14px; font-weight: 900; }

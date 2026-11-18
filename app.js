@@ -3,6 +3,7 @@ const gameScreen = document.querySelector('#game-screen');
 const endScreen = document.querySelector('#end-screen');
 const settingsForm = document.querySelector('#settings-form');
 const answerForm = document.querySelector('#answer-form');
+const numberRangeInput = document.querySelector('#number-range');
 const questionCountInput = document.querySelector('#question-count');
 const timeLimitInput = document.querySelector('#time-limit');
 const progressLabel = document.querySelector('#progress');
@@ -14,6 +15,7 @@ const answerInput = document.querySelector('#answer');
 const feedbackLabel = document.querySelector('#feedback');
 const finalScore = document.querySelector('#final-score');
 const finalMessage = document.querySelector('#final-message');
+const checkButton = document.querySelector('#check-button');
 
 const praise = [
   'SUPER! Täiesti õige! 🌟', 'VÄGA TUBLI! 🎉', 'Sa oled nutikas! 🧠',
@@ -27,10 +29,12 @@ const encouragement = [
 
 let totalQuestions = 10;
 let timeLimit = 30;
+let numberLimit = 100;
 let currentQuestion = 0;
 let correctAnswers = 0;
 let correctResult = 0;
 let timeLeft = 0;
+let wrongAttempts = 0;
 let timerId = null;
 let nextQuestionId = null;
 let locked = false;
@@ -48,14 +52,44 @@ function stopTimers() {
   nextQuestionId = null;
 }
 
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function makeQuestion() {
+  let a;
+  let b;
+  let operation;
+
+  if (Math.random() < 0.5) {
+    // Liitmisel valime teise arvu nii, et summa ei ületaks valitud piiri.
+    operation = '+';
+    a = randomInteger(1, numberLimit - 1);
+    b = randomInteger(1, numberLimit - a);
+    correctResult = a + b;
+  } else {
+    // Lahutamisel on mõlemad arvud valitud vahemikus ja vastus pole negatiivne.
+    operation = '−';
+    a = randomInteger(1, numberLimit);
+    b = randomInteger(1, a);
+    correctResult = a - b;
+  }
+
+  questionLabel.textContent = `${a} ${operation} ${b} = ?`;
+}
+
 function startGame() {
   totalQuestions = Number(questionCountInput.value);
   timeLimit = Number(timeLimitInput.value);
+  numberLimit = Number(numberRangeInput.value);
+
   if (!Number.isInteger(totalQuestions) || totalQuestions < 1 || totalQuestions > 100 ||
-      !Number.isInteger(timeLimit) || timeLimit < 5 || timeLimit > 300) {
-    alert('Palun vali tehete arv vahemikus 1–100 ja aeg vahemikus 5–300 sekundit.');
+      !Number.isInteger(timeLimit) || timeLimit < 5 || timeLimit > 300 ||
+      ![50, 100].includes(numberLimit)) {
+    alert('Palun kontrolli tehete arvu, aega ja arvude vahemikku.');
     return;
   }
+
   currentQuestion = 0;
   correctAnswers = 0;
   showScreen('game');
@@ -68,19 +102,11 @@ function nextQuestion() {
     finishGame();
     return;
   }
+
   currentQuestion += 1;
-  let a = Math.floor(Math.random() * 100) + 1;
-  let b = Math.floor(Math.random() * 100) + 1;
-  let operation;
-  if (Math.random() < 0.5) {
-    operation = '+';
-    correctResult = a + b;
-  } else {
-    operation = '−';
-    if (a < b) [a, b] = [b, a];
-    correctResult = a - b;
-  }
-  questionLabel.textContent = `${a} ${operation} ${b} = ?`;
+  wrongAttempts = 0;
+  makeQuestion();
+
   progressLabel.textContent = `Tehe ${currentQuestion} / ${totalQuestions}`;
   scoreLabel.textContent = `⭐ ${correctAnswers} õiget`;
   progressBar.style.width = `${((currentQuestion - 1) / totalQuestions) * 100}%`;
@@ -88,11 +114,12 @@ function nextQuestion() {
   feedbackLabel.className = 'feedback';
   answerInput.value = '';
   answerInput.disabled = false;
-  document.querySelector('#check-button').disabled = false;
+  checkButton.disabled = false;
   locked = false;
   timeLeft = timeLimit;
   updateTimer();
   answerInput.focus();
+
   timerId = setInterval(() => {
     if (timeLeft > 0) timeLeft -= 1;
     updateTimer();
@@ -115,18 +142,21 @@ function updateTimer() {
 function checkAnswer(event) {
   event.preventDefault();
   if (locked) return;
+
   const raw = answerInput.value.trim();
   if (raw === '') {
     feedbackLabel.textContent = 'Kirjuta kõigepealt vastus! 😊';
     feedbackLabel.className = 'feedback';
     return;
   }
+
   const answer = Number(raw);
   if (!Number.isInteger(answer)) {
     feedbackLabel.textContent = 'Palun sisesta täisarv!';
     feedbackLabel.className = 'feedback bad';
     return;
   }
+
   if (answer === correctResult) {
     correctAnswers += 1;
     locked = true;
@@ -134,16 +164,32 @@ function checkAnswer(event) {
     timerId = null;
     scoreLabel.textContent = `⭐ ${correctAnswers} õiget`;
     progressBar.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
-    feedbackLabel.textContent = praise[Math.floor(Math.random() * praise.length)];
+    feedbackLabel.textContent = praise[randomInteger(0, praise.length - 1)];
     feedbackLabel.className = 'feedback good';
     answerInput.disabled = true;
-    document.querySelector('#check-button').disabled = true;
+    checkButton.disabled = true;
     nextQuestionId = setTimeout(nextQuestion, 1300);
-  } else {
-    feedbackLabel.textContent = encouragement[Math.floor(Math.random() * encouragement.length)];
-    feedbackLabel.className = 'feedback bad';
-    answerInput.select();
+    return;
   }
+
+  wrongAttempts += 1;
+  answerInput.select();
+
+  if (wrongAttempts >= 3) {
+    locked = true;
+    if (timerId !== null) clearInterval(timerId);
+    timerId = null;
+    feedbackLabel.textContent = `Õige vastus oli ${correctResult}. Pole hullu – õpime ja proovime järgmist! 💪`;
+    feedbackLabel.className = 'feedback timeup';
+    answerInput.disabled = true;
+    checkButton.disabled = true;
+    nextQuestionId = setTimeout(nextQuestion, 2500);
+    return;
+  }
+
+  const remaining = 3 - wrongAttempts;
+  feedbackLabel.textContent = `${encouragement[randomInteger(0, encouragement.length - 1)]} Veel ${remaining} ${remaining === 1 ? 'katse' : 'katset'}.`;
+  feedbackLabel.className = 'feedback bad';
 }
 
 function finishGame() {
@@ -161,4 +207,7 @@ settingsForm.addEventListener('submit', (event) => {
   startGame();
 });
 answerForm.addEventListener('submit', checkAnswer);
-document.querySelector('#again-button').addEventListener('click', () => showScreen('start'));
+document.querySelector('#again-button').addEventListener('click', () => {
+  stopTimers();
+  showScreen('start');
+});

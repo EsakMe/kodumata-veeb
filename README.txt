@@ -1,20 +1,7 @@
-KODUMATA – VEEBIVERSIOON
+KODUMATA veebiversioon
 
-Failid:
-- index.html  mängu struktuur
-- style.css   kujundus ja mobiilivaade
-- app.js      mänguloogika
+Failid: index.html, style.css, app.js
 
-KOHALIK KATSETAMINE
-1. Paki ZIP lahti.
-2. Ava kaust.
-3. Tee topeltklõps failil index.html.
-4. Mäng avaneb veebibrauseris.
+GitHubi uuendamiseks laadi need kolm faili oma kodumata-veeb repository juurkausta ja kinnita muudatused (Commit changes). index.html peab olema repository juurkaustas.
 
-VEEBISSE ÜLESLAADIMINE (tasuta Netlify Drop)
-1. Paki ZIP arvutis lahti.
-2. Ava https://app.netlify.com/drop
-3. Lohista sinna lahtipakitud kodumata-veeb kaust.
-4. Netlify avaldab veebilehe ja annab jagatava aadressi.
-
-Mäng on praegu täielikult brauseris töötav ega vaja serverit, andmebaasi ega Java installatsiooni.
+Uus: arvude vahemiku valik 1-50 või 1-100; liitmise tulemus ei ületa valitud piiri; pärast kolme vale arvulist vastust näidatakse õiget vastust ja liigutakse automaatselt järgmise tehte juurde.

@@ -25,6 +25,13 @@
 
       <form id="settings-form" class="settings-form">
         <label class="setting">
+          <span>Milliste arvudega soovid arvutada?</span>
+          <select id="number-range">
+            <option value="50">Arvud 1–50 (vastus kuni 50)</option>
+            <option value="100" selected>Arvud 1–100 (vastus kuni 100)</option>
+          </select>
+        </label>
+        <label class="setting">
           <span>Mitu tehet soovid teha?</span>
           <input id="question-count" type="number" min="1" max="100" value="10" required>
         </label>
@@ -34,7 +41,7 @@
         </label>
         <button class="button button-primary" type="submit">Alustame! 🚀</button>
       </form>
-      <p class="small-note">Vastuse saad alati rahulikult lõpuni lahendada – ka siis, kui aeg saab otsa.</p>
+      <p class="small-note">Vastuse saad alati rahulikult lõpuni lahendada – ka siis, kui aeg saab otsa. Kui vastad kolm korda valesti, näitame õige vastuse ja liigume edasi.</p>
     </section>
 
     <section id="game-screen" class="screen card" hidden>
@@ -52,7 +59,7 @@
         <button id="check-button" class="button button-primary" type="submit">Kontrolli! ✓</button>
       </form>
       <p id="feedback" class="feedback" aria-live="polite">Sisesta oma vastus! 😊</p>
-      <p class="small-note">Vale vastuse korral saad uuesti proovida.</p>
+      <p class="small-note">Kolme vale vastuse järel näitame õige vastuse ja anname uue tehte.</p>
     </section>
 
     <section id="end-screen" class="screen card" hidden>
