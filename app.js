@@ -207,14 +207,13 @@
           answerInput.disabled = true;
           checkButton.disabled = true;
           nextQuestionId = window.setTimeout(nextQuestion, 2500);
-        }
-      }
+            }
       }
     }, 1000);
   }
 
   function checkAnswer(event) {
-    function checkAnswer(event) {
+    
     var raw;
     var answer;
     var remaining;
@@ -312,7 +311,7 @@
   }
     
   function finishGame() {
-  function finishGame() {
+  
     var percentage;
     var wrongList;
     var heading;
