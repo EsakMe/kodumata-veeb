@@ -54,6 +54,8 @@
   var numberLimit = 100;
   var currentQuestion = 0;
   var correctAnswers = 0;
+  var scorePoints = 0;
+  var wrongQuestions = [];
   var correctResult = 0;
   var timeLeft = 0;
   var wrongAttempts = 0;
@@ -125,6 +127,8 @@
 
     currentQuestion = 0;
     correctAnswers = 0;
+    scorePoints = 0;
+    wrongQuestions = [];
     showScreen('game');
     nextQuestion();
   }
@@ -163,7 +167,7 @@
     makeQuestion();
 
     progressLabel.textContent = 'Tehe ' + currentQuestion + ' / ' + totalQuestions;
-    scoreLabel.textContent = '⭐ ' + correctAnswers + ' õiget';
+    scoreLabel.textContent = '⭐ ' + scorePoints.toFixed(1).replace('.', ',') + ' punkti';
     progressBar.style.width = (((currentQuestion - 1) / totalQuestions) * 100) + '%';
     setFeedback('Ootan sinu vastust! 😊', '');
     answerInput.value = '';
@@ -180,17 +184,37 @@
       }
       updateTimer();
 
-      if (timeLeft === 0) {
+           if (timeLeft === 0) {
         window.clearInterval(timerId);
         timerId = null;
         timerLabel.textContent = '⏰ AEG SAI OTSA!';
         addClass(timerLabel, 'urgent');
-        setFeedback('Pole hullu! Proovi rahulikult edasi! 💪', 'timeup');
+
+        if (wrongAttempts === 0) {
+          wrongAttempts = 1;
+          setFeedback('Aeg sai otsa! Sul on veel üks viimane katse! 💪', 'timeup');
+          focusAnswerField();
+        } else {
+          locked = true;
+
+          wrongQuestions.push({
+            question: questionLabel.textContent,
+            answer: correctResult
+          });
+
+          setFeedback('Aeg sai otsa! Õige vastus oli ' + correctResult + '. Proovime järgmist! 💪', 'timeup');
+
+          answerInput.disabled = true;
+          checkButton.disabled = true;
+          nextQuestionId = window.setTimeout(nextQuestion, 2500);
+        }
+      }
       }
     }, 1000);
   }
 
   function checkAnswer(event) {
+    function checkAnswer(event) {
     var raw;
     var answer;
     var remaining;
@@ -198,17 +222,20 @@
     if (event && event.preventDefault) {
       event.preventDefault();
     }
+
     if (locked) {
       return false;
     }
 
     raw = String(answerInput.value).replace(/^\s+|\s+$/g, '');
+
     if (raw === '') {
       setFeedback('Kirjuta kõigepealt vastus! 😊', '');
       return false;
     }
 
     answer = Number(raw);
+
     if (!isWholeNumber(answer)) {
       setFeedback('Palun sisesta täisarv!', 'bad');
       return false;
@@ -216,14 +243,29 @@
 
     if (answer === correctResult) {
       correctAnswers += 1;
+
+      if (wrongAttempts === 0) {
+        scorePoints += 1;
+      } else {
+        scorePoints += 0.5;
+      }
+
       locked = true;
+
       if (timerId !== null) {
         window.clearInterval(timerId);
         timerId = null;
       }
-      scoreLabel.textContent = '⭐ ' + correctAnswers + ' õiget';
+
+      scoreLabel.textContent = '⭐ ' + scorePoints.toFixed(1).replace('.', ',') + ' punkti';
       progressBar.style.width = ((currentQuestion / totalQuestions) * 100) + '%';
-      setFeedback(praise[randomInteger(0, praise.length - 1)], 'good');
+
+      if (wrongAttempts === 0) {
+        setFeedback(praise[randomInteger(0, praise.length - 1)], 'good');
+      } else {
+        setFeedback('Tubli! Teise katsega õige vastus! +0,5 punkti! 🌟', 'good');
+      }
+
       answerInput.disabled = true;
       checkButton.disabled = true;
       nextQuestionId = window.setTimeout(nextQuestion, 1300);
@@ -231,38 +273,61 @@
     }
 
     wrongAttempts += 1;
-    if (typeof answerInput.select === 'function') {
-      answerInput.select();
-    }
 
-    if (wrongAttempts >= 3) {
+    if (wrongAttempts >= 2) {
       locked = true;
+
       if (timerId !== null) {
         window.clearInterval(timerId);
         timerId = null;
       }
-      setFeedback('Õige vastus oli ' + correctResult + '. Pole hullu – õpime ja proovime järgmist! 💪', 'timeup');
+
+      wrongQuestions.push({
+        question: questionLabel.textContent,
+        answer: correctResult
+      });
+
+      setFeedback('Õige vastus oli ' + correctResult + '. Pole hullu – proovime järgmist! 💪', 'timeup');
+
       answerInput.disabled = true;
       checkButton.disabled = true;
       nextQuestionId = window.setTimeout(nextQuestion, 2500);
       return false;
     }
-    
-    focusAnswerField();
-    remaining = 3 - wrongAttempts;
+
+    remaining = 2 - wrongAttempts;
+
     setFeedback(
       encouragement[randomInteger(0, encouragement.length - 1)] +
-      ' Veel ' + remaining + (remaining === 1 ? ' katse.' : ' katset.'),
+      ' Sul on veel üks katse!',
       'bad'
     );
+
+    if (typeof answerInput.select === 'function') {
+      answerInput.select();
+    }
+
+    focusAnswerField();
     return false;
   }
-
+    
+  function finishGame() {
   function finishGame() {
     var percentage;
+    var wrongList;
+    var heading;
+    var list;
+    var item;
+    var i;
+
     stopTimers();
-    finalScore.textContent = correctAnswers + ' / ' + totalQuestions + ' õiget vastust!';
-    percentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+    finalScore.textContent =
+      scorePoints.toFixed(1).replace('.', ',') +
+      ' / ' + totalQuestions + ' punkti (' +
+      correctAnswers + ' õigesti lahendatud tehet)';
+
+    percentage = Math.round((scorePoints / totalQuestions) * 100);
 
     if (percentage === 100) {
       finalMessage.textContent = 'Kõik õiged! Sa oled tõeline matemaatik! 🏆';
@@ -271,6 +336,41 @@
     } else {
       finalMessage.textContent = 'Tubli pingutus! Harjutades läheb iga kord paremini! 💪';
     }
+
+    wrongList = byId('wrong-questions-list');
+
+    if (!wrongList) {
+      wrongList = document.createElement('div');
+      wrongList.id = 'wrong-questions-list';
+      endScreen.appendChild(wrongList);
+    }
+
+    while (wrongList.firstChild) {
+      wrongList.removeChild(wrongList.firstChild);
+    }
+
+    heading = document.createElement('h3');
+    heading.textContent = 'Tehted, mis vajavad veel harjutamist:';
+    wrongList.appendChild(heading);
+
+    if (wrongQuestions.length === 0) {
+      var successMessage = document.createElement('p');
+      successMessage.textContent = 'Suurepärane! Kõik tehted said õigesti lahendatud! 🎉';
+      wrongList.appendChild(successMessage);
+    } else {
+      list = document.createElement('ul');
+
+      for (i = 0; i < wrongQuestions.length; i++) {
+        item = document.createElement('li');
+        item.textContent =
+          wrongQuestions[i].question +
+          ' Õige vastus: ' + wrongQuestions[i].answer;
+        list.appendChild(item);
+      }
+
+      wrongList.appendChild(list);
+    }
+
     showScreen('end');
   }
 
