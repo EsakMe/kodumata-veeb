@@ -1,3 +1,4 @@
+
 /* Kodumata – vanemate brauserite versioon (ES5, sh iOS 9 Safari). */
 (function () {
   'use strict';
@@ -153,6 +154,51 @@
     element.className = element.className.replace(expression, ' ').replace(/^\s+|\s+$/g, '');
   }
 
+  function startQuestionTimer() {
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+
+    timeLeft = timeLimit;
+    updateTimer();
+
+    timerId = window.setInterval(function () {
+      if (timeLeft > 0) {
+        timeLeft -= 1;
+      }
+
+      updateTimer();
+
+      if (timeLeft === 0) {
+        window.clearInterval(timerId);
+        timerId = null;
+        timerLabel.textContent = '⏰ AEG SAI OTSA!';
+        addClass(timerLabel, 'urgent');
+
+        if (wrongAttempts === 0) {
+          wrongAttempts = 1;
+          answerInput.value = '';
+          setFeedback('Aeg sai otsa! Sul on veel üks viimane katse! 💪', 'timeup');
+          focusAnswerField();
+          startQuestionTimer();
+        } else {
+          locked = true;
+
+          wrongQuestions.push({
+            question: questionLabel.textContent.replace(/\s+/g, '').replace('=?', '=' + correctResult)
+          });
+
+          setFeedback('Aeg sai otsa! Õige vastus oli ' + correctResult + '. Proovime järgmist! 💪', 'timeup');
+
+          answerInput.disabled = true;
+          checkButton.disabled = true;
+          nextQuestionId = window.setTimeout(nextQuestion, 2500);
+        }
+      }
+    }, 1000);
+  }
+
   function nextQuestion() {
     stopTimers();
 
@@ -169,54 +215,20 @@
     progressLabel.textContent = 'Tehe ' + currentQuestion + ' / ' + totalQuestions;
     scoreLabel.textContent = '⭐ ' + scorePoints.toFixed(1).replace('.', ',') + ' punkti';
     progressBar.style.width = (((currentQuestion - 1) / totalQuestions) * 100) + '%';
+
     setFeedback('Ootan sinu vastust! 😊', '');
+
     answerInput.value = '';
     answerInput.disabled = false;
     checkButton.disabled = false;
+
     focusAnswerField();
-
-    timeLeft = timeLimit;
-    updateTimer();
-
-    timerId = window.setInterval(function () {
-      if (timeLeft > 0) {
-        timeLeft -= 1;
-      }
-      updateTimer();
-
-           if (timeLeft === 0) {
-        window.clearInterval(timerId);
-        timerId = null;
-        timerLabel.textContent = '⏰ AEG SAI OTSA!';
-        addClass(timerLabel, 'urgent');
-
-        if (wrongAttempts === 0) {
-          wrongAttempts = 1;
-          setFeedback('Aeg sai otsa! Sul on veel üks viimane katse! 💪', 'timeup');
-          focusAnswerField();
-        } else {
-          locked = true;
-
-          wrongQuestions.push({
-            question: questionLabel.textContent,
-            answer: correctResult
-          });
-
-          setFeedback('Aeg sai otsa! Õige vastus oli ' + correctResult + '. Proovime järgmist! 💪', 'timeup');
-
-          answerInput.disabled = true;
-          checkButton.disabled = true;
-          nextQuestionId = window.setTimeout(nextQuestion, 2500);
-            }
-      }
-    }, 1000);
+    startQuestionTimer();
   }
 
   function checkAnswer(event) {
-    
     var raw;
     var answer;
-    var remaining;
 
     if (event && event.preventDefault) {
       event.preventDefault();
@@ -282,8 +294,7 @@
       }
 
       wrongQuestions.push({
-        question: questionLabel.textContent,
-        answer: correctResult
+        question: questionLabel.textContent.replace(/\s+/g, '').replace('=?', '=' + correctResult)
       });
 
       setFeedback('Õige vastus oli ' + correctResult + '. Pole hullu – proovime järgmist! 💪', 'timeup');
@@ -294,24 +305,25 @@
       return false;
     }
 
-    remaining = 2 - wrongAttempts;
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+
+    answerInput.value = '';
 
     setFeedback(
       encouragement[randomInteger(0, encouragement.length - 1)] +
-      ' Sul on veel üks katse!',
+      ' Sul on veel üks katse! Aeg algab uuesti.',
       'bad'
     );
 
-    if (typeof answerInput.select === 'function') {
-      answerInput.select();
-    }
-
+    startQuestionTimer();
     focusAnswerField();
     return false;
   }
-    
+
   function finishGame() {
-  
     var percentage;
     var wrongList;
     var heading;
@@ -361,9 +373,7 @@
 
       for (i = 0; i < wrongQuestions.length; i++) {
         item = document.createElement('li');
-        item.textContent =
-          wrongQuestions[i].question +
-          ' Õige vastus: ' + wrongQuestions[i].answer;
+        item.textContent = wrongQuestions[i].question;
         list.appendChild(item);
       }
 
@@ -377,6 +387,7 @@
     if (event && event.preventDefault) {
       event.preventDefault();
     }
+
     startGame();
     return false;
   }, false);
